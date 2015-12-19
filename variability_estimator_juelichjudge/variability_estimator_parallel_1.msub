@@ -1,0 +1,29 @@
+
+#!/bin/bash
+
+#MSUB -l nodes=1:ppn=8
+#MSUB -l walltime=3:00:00:00
+#MSUB -l mem=16gb
+#MSUB -l pmem=2gb
+#MSUB -l pvmem=2gb
+#MSUB -N var_estimator_test
+#MSUB -j oe
+#MSUB -o log_test_msub1_patch1.log
+PYTHONCOMPILED=MODULE
+export PYTHONCOMPILED
+export OMP_NUM_THREADS=1
+
+module load gsl   
+cd $WORK/variability_estimator_juelich_patch1
+echo `pwd`
+echo `which parallel`
+echo $PBS_NODEFILE
+
+
+
+# processing all files given in filelist_1.lst, the files must be placed in files_in
+
+cat filelist_1.lst | parallel -j 8 "echo {}; python var_estimator.py {}"
+
+
+
